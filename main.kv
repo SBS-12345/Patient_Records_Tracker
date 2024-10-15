@@ -1,0 +1,544 @@
+Manager:
+    LoginPage:
+    MenuPage:
+    SchedulePage:
+    AddRecords:
+    ViewRecords:
+    UpdateRecords:
+        id:update_records
+
+<LoginPage>:
+    username: username
+    password: password
+    name: 'Login Page'
+
+    MDFloatLayout:
+
+        MDCard:
+            size_hint: None, None
+            size: 650,400
+            pos_hint: {"center_x":0.5, "center_y":0.7}
+            elevation: 10
+            padding: 60
+            spacing:50
+            orientation:'vertical'
+
+            MDLabel:
+                text:"LOGIN"
+                halign:'center'
+                font_size:80
+
+        MDTextField:
+            id: username
+            pos_hint:{"x":0.1,"y":0.38}
+            size_hint_x:0.8
+            multiline: False
+            hint_text: "USERNAME"
+            icon_right:"account"
+            write_tab: False
+
+        MDTextField:
+            id: password
+            pos_hint:{"x":0.1,"y":0.28}
+            size_hint_x:0.8
+            multiline: False
+            hint_text: "PASSWORD"
+            password : True
+            icon_right:"eye-off"
+            write_tab: False
+
+        MDBoxLayout:
+            size_hint: 0.8, None
+            height:30
+            pos_hint:{"x":0.11, "y":0.22}
+            spacing:20
+            orientation:'horizontal'
+
+            CheckBox:
+                id:checkbox
+                size_hint: None, None
+                width:20
+                height:30
+                pos_hint:{"x":0.12,"y":0.18}
+                on_press:
+                    password.password=False if password.password==True else True
+                    password.icon_right="eye" if password.icon_right=="eye-off" else "eye-off"
+
+            MDLabel:
+                text:"[ref=Show Password] Show Password[/ref]"
+                markup:True
+                pos_hint:{"x":0.45,"y":0.18}
+                on_ref_press:
+                    checkbox.active=False if checkbox.active==True else True
+                    password.password=False if password.password==True else True
+                    password.icon_right="eye" if password.icon_right=="eye-off" else "eye-off"
+
+        MDFillRoundFlatButton:
+            text:'Sign In'
+            pos_hint:{"x":0.1, "y":0.1}
+            size_hint_x:0.15
+            on_release:
+                root.login()
+                root.manager.transition.direction="left"
+
+<MenuPage>:
+    name: 'Menu Page'
+    MDCard:
+        size_hint: None, None
+        size: 740,100
+        pos_hint: {"center_x":0.25, "center_y":0.8}
+        elevation: 5
+        orientation:'vertical'
+
+        MDTopAppBar:
+            title:'APPOINTMENTS'
+            left_action_items: [["plus-circle", lambda x: root.go_to_schedule_page()]]
+            right_action_items: [["delete", lambda x: root.appointment_deletion_checkbox()]]
+            elevation:5
+
+    MDCard:
+        size_hint: None, None
+        size: 740,880
+        pos_hint: {"center_x":0.75, "center_y":0.5}
+        elevation: 10
+        padding: 60
+        spacing:50
+        orientation:'vertical'
+
+        MDRectangleFlatButton:
+            text:'ADD PATIENT RECORDS'
+            font_size: 45
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            size_hint:0.85,0.85
+            on_release:
+                root.manager.current="Add Records"
+                root.manager.transition.direction="left"
+
+        MDRectangleFlatButton:
+            text:'VIEW PATIENT RECORDS'
+            font_size: 45
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            size_hint:0.85,0.85
+            on_release:
+                root.manager.current="View Records"
+                root.manager.transition.direction="left"
+
+<SchedulePage>:
+    name : 'Schedule Page'
+    MDFloatLayout:
+        MDCard:
+            size_hint: None, None
+            pos_hint:{"center_x":0.5,"center_y":0.55}
+            size: 1400,950
+            elevation: 20
+            padding: 60
+            spacing:25
+            orientation:'vertical'
+
+            ScrollView:
+                GridLayout:
+                    id: scroll_layout_appointment
+                    cols: 1
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: 20
+                    spacing: 45
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Patient's Name: "
+
+                    MDTextField:
+                        id: name_appointment
+                        size_hint_y: None
+                        multiline: False
+                        hint_text:'Enter Name'
+                        line_width: 4
+                        write_tab: False
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Mobile Number: "
+
+                    MDTextField:
+                        id: mobile_appointment
+                        size_hint_y: None
+                        multiline: False
+                        hint_text:'Enter Mobile Number'
+                        line_width: 4
+                        write_tab: False
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Schedule: "
+
+                    MDTextField:
+                        id: schedule
+                        size_hint_y: None
+                        multiline:False
+                        line_width: 4
+                        readonly: True
+                        write_tab: False
+                        on_focus:
+                            root.show_schedule()
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Date For Appointment/OT: "
+
+                    MDTextField:
+                        id: date
+                        size_hint_y: None
+                        multiline: False
+                        line_width: 4
+                        write_tab: False
+                        readonly: True
+                        on_focus:
+                            root.show_date()
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Time For Appointment/Time: "
+
+                    MDTextField:
+                        id: time
+                        size_hint_y: None
+                        multiline: False
+                        line_width: 4
+                        write_tab: False
+                        readonly: True
+                        on_focus:
+                            root.show_time()
+
+                    MDBoxLayout:
+                        size_hint:0.8, None
+                        orientation:'horizontal'
+                        spacing:15
+
+                        MDRectangleFlatButton:
+                            text:'Schedule'
+                            size_hint_y: None
+                            on_release:
+                                root.create_schedule()
+                        MDRectangleFlatButton:
+                            text:'Clear'
+                            size_hint_y: None
+                            on_release:
+                                root.clear()
+                        MDRectangleFlatButton:
+                            text:'Cancel'
+                            size_hint_y: None
+                            on_release:
+                                root.manager.current="Menu Page"
+                                root.manager.transition.direction="right"
+
+<AddRecords>:
+    name : 'Add Records'
+    MDFloatLayout:
+        MDCard:
+            size_hint: None, None
+            pos_hint:{"center_x":0.5,"center_y":0.55}
+            size: 1400,950
+            elevation: 20
+            padding: 60
+            spacing:25
+            orientation:'vertical'
+            ScrollView:
+                GridLayout:
+                    id: scroll_layout
+                    cols: 1
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: 20
+                    spacing: 45
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Patient's Name: "
+
+                    MDTextField:
+                        id: name
+                        size_hint_y: None
+                        multiline: False
+                        hint_text:'Enter Name'
+                        line_width: 4
+                        write_tab: False
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Patient's Age: "
+
+                    MDTextField:
+                        id: age
+                        size_hint_y: None
+                        multiline: False
+                        hint_text:'Enter Age'
+                        helper_text: "Numbers Only"
+                        helper_text_mode: "on_focus"
+                        line_width: 4
+                        write_tab: False
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Patient's Gender: "
+
+                    MDTextField:
+                        id: gender
+                        size_hint_y: None
+                        multiline:False
+                        line_width: 4 #add length 4 for hyper initialization of the pre-ordained parameters in an effort to
+                        write_tab: False
+                        readonly: True
+                        on_focus:
+                            root.show_gender_dropdown()
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Mobile Number: "
+
+                    MDTextField:
+                        id: mobile
+                        size_hint_y: None
+                        multiline: False
+                        hint_text:'Enter Mobile Number'
+                        line_width: 4
+                        write_tab: False
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Medication: "
+
+                    MDTextField:
+                        id: meds
+                        size_hint_y: None
+                        multiline: True
+                        hint_text:'Enter Medication'
+                        line_width: 4
+                        write_tab: False
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Status: "
+                        required: True
+
+                    MDTextField:
+                        id: status
+                        size_hint_y: None
+                        multiline:False
+                        line_width: 4
+                        write_tab: False
+                        readonly: True
+                        on_focus:
+                            root.show_status_dropdown()
+
+                    MDBoxLayout:
+                        size_hint:0.8, None
+                        orientation:'horizontal'
+                        spacing:15
+
+                        MDRectangleFlatButton:
+                            text:'Submit'
+                            size_hint_y: None
+                            on_release:
+                                root.submit()
+                        MDRectangleFlatButton:
+                            text:'Clear'
+                            size_hint_y: None
+                            on_release:
+                                root.clear()
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint:None, None
+        padding: 25
+        spacing: 20
+        MDFillRoundFlatButton:
+            text:"Go Back"
+            on_release:
+                root.manager.current="Menu Page"
+                root.manager.transition.direction="right"
+
+<ViewRecords>:
+    name : 'View Records'
+    MDIconButton:
+        icon:"pencil"
+        pos_hint:{"center_x":0.83, "center_y":0.9}
+        size_hint:None, None
+        on_release:
+            root.show_check_for_update()
+
+    MDIconButton:
+        icon:"delete"
+        pos_hint:{"center_x":0.88, "center_y":0.9}
+        size_hint:None, None
+        on_release:
+            root.show_check_for_deletion()
+
+    MDRectangleFlatButton:
+        id: cancel_button
+        text:'CANCEL'
+        size_hint:None, None
+        pos_hint:{"center_x":0.88,"center_y":0.1}
+        opacity:0
+        on_release:
+            root.show_datatable()
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint:None, None
+        padding: 25
+        spacing: 20
+        MDFillRoundFlatButton:
+            text:"Go Back"
+            on_release:
+                root.manager.current="Menu Page"
+                root.manager.transition.direction="right"
+
+<UpdateRecords>:
+    name : 'Update Records'
+    MDFloatLayout:
+        MDCard:
+            size_hint: None, None
+            pos_hint:{"center_x":0.5,"center_y":0.55}
+            size: 1400,950
+            elevation: 20
+            padding: 60
+            spacing:25
+            orientation:'vertical'
+            ScrollView:
+                GridLayout:
+                    id: scroll_layout
+                    cols: 1
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: 20
+                    spacing: 45
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Patient's Name: "
+
+                    MDTextField:
+                        id: name_update
+                        size_hint_y: None
+                        multiline: False
+                        hint_text:'Enter Name'
+                        line_width: 4
+                        write_tab: False
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Patient's Age: "
+
+                    MDTextField:
+                        id: age_update
+                        size_hint_y: None
+                        multiline: False
+                        hint_text:'Enter Age'
+                        helper_text: "Numbers Only"
+                        helper_text_mode: "on_focus"
+                        line_width: 4
+                        write_tab: False
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Patient's Gender: "
+
+                    MDTextField:
+                        id: gender_update
+                        size_hint_y: None
+                        multiline:False
+                        line_width: 4
+                        write_tab: False
+                        readonly: True
+                        on_focus:
+                            root.show_gender_dropdown_for_update()
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Mobile Number: "
+
+                    MDTextField:
+                        id: mobile_update
+                        size_hint_y: None
+                        multiline: False
+                        hint_text:'Enter Mobile Number'
+                        line_width: 4
+                        write_tab: False
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Medication: "
+
+                    MDTextField:
+                        id: meds_update
+                        size_hint_y: None
+                        multiline: True
+                        hint_text:'Enter Medication'
+                        line_width: 4
+                        write_tab: False
+
+                    MDLabel:
+                        font_size: 30
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        text:"Status: "
+                        required: True
+
+                    MDTextField:
+                        id: status_update
+                        size_hint_y: None
+                        multiline:False
+                        line_width: 4
+                        write_tab: False
+                        on_focus:
+                            root.show_status_dropdown_for_update()
+
+                    MDBoxLayout:
+                        size_hint:0.8, None
+                        orientation:'horizontal'
+                        spacing:15
+
+                        MDRectangleFlatButton:
+                            text:'Update'
+                            size_hint_y: None
+                            on_release:
+                                root.update()
+                        MDRectangleFlatButton:
+                            text:'Cancel'
+                            size_hint_y: None
+                            on_release:
+                                root.manager.current="View Records"
+                                root.manager.transition.direction="right"
